@@ -11,7 +11,7 @@ const main = async () => {
          console.log(`Listening on port ${config.PORT}`)
       })
    } catch (error) {
-
+      console.log(error)
    }
 };
 

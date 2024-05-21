@@ -5,11 +5,6 @@ import { ProductsModel } from "./Products.Model"
 
 
 
-/************************************************ */
-//All the Products Service Logics
-/************************************************* */
-
-
 const addProductToDB = async (productData: Product) => {
     try {
         const result = await ProductsModel.create(productData);
@@ -65,7 +60,7 @@ const updateSingleProductFromDB = async (id: string, productData: Product) => {
 const searchProductsFromDB = async (query: string) => {
     try {
         const result = await ProductsModel.find({
-            name: { $regex: query, $options: 'i' } // Case-insensitive partial match
+            name: { $regex: query, $options: 'i' } 
         })
         return result
     } catch (error) {

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
 import { ProductServices } from "./Products.Services";
-import ProductValidationSchema from "./Products.validation";
 import { Types } from "mongoose";
+import ProductValidationSchema from "./Products.validation";
 
 const addAProduct = async (req: Request, res: Response) => {
     try {
@@ -30,15 +30,34 @@ const addAProduct = async (req: Request, res: Response) => {
 
 const getAllProducts = async (req: Request, res: Response) => {
     try {
-        const result = await ProductServices.getAllProductsFromDB();
-        if (result) {
-            res.status(200).json({
-                success: true,
-                message: "Products fetched successfully!",
-                data: result
-            })
+        if (req.query.searchTerm) {
+            const query = req.query.searchTerm as string;
+            const result = await ProductServices.searchProductsFromDB(query);
+            console.log( result);
+            if(result?.length!=0){
+                res.status(200).json({
+                    success: true,
+                    message: "Products fetched successfully!",
+                    data: result
+                })
+            }else{
+                res.status(500).json({
+                    success: false,
+                    message: 'Failed to fetch products!',
+                   
+                })
+            }
         } else {
-            throw new Error('Something wrong!')
+            const result = await ProductServices.getAllProductsFromDB();
+            if (result) {
+                res.status(200).json({
+                    success: true,
+                    message: "Products fetched successfully!",
+                    data: result
+                })
+            } else {
+                throw new Error('Something wrong!')
+            }
         }
     } catch (error: any) {
         res.status(500).json({
@@ -124,31 +143,12 @@ const updateSingleProduct = async (req: Request, res: Response) => {
 }
 
 
-const searchProducts = async (req: Request, res: Response) => {
-    try {
-        const query = req.query.searchTerm as string;
-        console.log(query);
-        const result = await ProductServices.searchProductsFromDB(query);
-        res.status(200).json({
-            success: true,
-            message: "Products fetched successfully! or not",
-            data: result
-        })
-    } catch (error: any) {
-        res.status(500).json({
-            success: false,
-            message: 'Something went wrong!',
-            error: error,
-        })
-    }
 
-}
 export const ProductController = {
     addAProduct,
     getAllProducts,
     getSingleProduct,
     deleteSingleProduct,
     updateSingleProduct,
-    searchProducts
 
 }
