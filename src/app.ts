@@ -1,6 +1,7 @@
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import productRouter from "./app/modules/products/Products.Routes";
+import ordersRouter from "./app/modules/orders/Orders.Routes";
 
 const app: Application = express();
 
@@ -14,5 +15,6 @@ app.get('/', (req: Request, res: Response) => {
 
 app.use('/api/products', productRouter);
 
+app.use('/api/orders',ordersRouter);
 
 export default app;
