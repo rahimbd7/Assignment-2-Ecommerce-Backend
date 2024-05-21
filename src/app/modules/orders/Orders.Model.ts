@@ -21,7 +21,7 @@ const OrdersSchema = new Schema<Orders>({
         required: [true, 'Quantity is required'],
         min: [1, 'Quantity must be at least 1']
     }
-});
+},{ versionKey: false});
 
 // Create the Mongoose model
 export const OrdersModel = model<Orders>('Orders', OrdersSchema);

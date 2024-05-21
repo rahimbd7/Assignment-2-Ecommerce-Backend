@@ -7,13 +7,13 @@ import { Inventory, Product, Variant } from "./Products.Interface";
 const VariantSchema = new Schema<Variant>({
     type: { type: String, required: [true, 'Variant type is required'] },
     value: { type: String, required: [true, 'Variant value is required'] }
-  });
+  },{_id:false});
   
 
   const InventorySchema = new Schema<Inventory>({
     quantity: { type: Number, required: [true, 'Quantity is required'] },
     inStock: { type: Boolean, required: [true, 'InStock status is required'] }
-  });
+  },{_id:false});
   
 
   const ProductSchema = new Schema<Product>({
@@ -26,7 +26,9 @@ const VariantSchema = new Schema<Variant>({
     inventory: { type: InventorySchema, required: [true, 'Product inventory is required'] }
   }, {
     toJSON: { virtuals: true },
-    toObject: { virtuals: true }
+    toObject: { virtuals: true },
+    versionKey: false,
+    id: false 
   });
 
 

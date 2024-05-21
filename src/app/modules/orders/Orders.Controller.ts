@@ -6,26 +6,23 @@ const addOrders = async (req: Request, res: Response) => {
     try {
         const orderData = req.body;
         const validatedData = OrderValidationSchema.parse(orderData);
-        const result = await OrderServices.addOrderToDB(validatedData);
-        if (result) {
+        const result: any = await OrderServices.addOrderToDB(validatedData);
+        if (result!=undefined && result?.success!=false) {
             res.status(200).json({
                 success: true,
                 message: "Order created successfully!",
-                data: {
-                    email: result.email,
-                    productId: result.productId,
-                    price: result.price,
-                    quantity: result.quantity
-                }
+                data: result
             })
+        } else if (result?.success===false) {
+            res.status(500).send(result);
         } else {
             throw new Error('Something wrong!')
         }
-    } catch (error: any) {
-        res.status(500).json({
+
+    } catch (error) {
+        res.status(500).send({
             success: false,
-            message: 'Something went wrong!',
-            error: error
+            messsage: "No Product has found with this Id!",
         })
     }
 }
@@ -75,9 +72,6 @@ const getAllOrders = async (req: Request, res: Response) => {
                 throw new Error('Something wrong!')
             }
         }
-
-
-
     } catch (error: any) {
         res.status(500).json({
             success: false,

@@ -9,7 +9,6 @@ const addAProduct = async (req: Request, res: Response) => {
         const validatedData = ProductValidationSchema.parse(productData);
         const result = await ProductServices.addProductToDB(validatedData);
         if (result) {
-            console.log(result)
             res.status(200).json({
                 success: true,
                 message: "Product created successfully!",
@@ -49,7 +48,7 @@ const getAllProducts = async (req: Request, res: Response) => {
             }
         } else {
             const result = await ProductServices.getAllProductsFromDB();
-            if (result) {
+            if (result?.length != 0) {
                 res.status(200).json({
                     success: true,
                     message: "Products fetched successfully!",
@@ -128,7 +127,7 @@ const updateSingleProduct = async (req: Request, res: Response) => {
             res.status(200).json({
                 success: true,
                 message: "Product updated successfully!",
-                data: result
+                data:result
             })
         } else {
             throw new Error('Something wrong!')
