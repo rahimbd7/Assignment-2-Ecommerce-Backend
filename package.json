@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "start":"node dist/server.js",
     "build": "tsc",
     "dev": "tsc --watch",
     "lint": "eslint src --ignore-path .eslintignore --ext .ts",
