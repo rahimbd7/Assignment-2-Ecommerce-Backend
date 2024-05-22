@@ -1,31 +1,30 @@
 import { Request, Response } from 'express'
-import { OrderServices } from './Orders.Services'
+import { OrderResult, OrderServices } from './Orders.Services'
 import OrderValidationSchema from './Orders.Validation'
+
 
 const addOrders = async (req: Request, res: Response) => {
   try {
-    const orderData = req.body
-    const validatedData = OrderValidationSchema.parse(orderData)
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const result: any = await OrderServices.addOrderToDB(validatedData)
-    if (result != undefined && result?.success != false) {
-      res.status(200).json({
-        success: true,
-        message: 'Order created successfully!',
-        data: result,
-      })
-    } else if (result?.success === false) {
-      res.status(500).send(result)
-    } else {
-      throw new Error('Something wrong!')
-    }
+      const orderData = req.body;
+      const validatedData = OrderValidationSchema.parse(orderData);
+      const result: OrderResult = await OrderServices.addOrderToDB(validatedData);
+
+      if (result.success) {
+          res.status(200).json({
+              success: true,
+              message: result.message,
+              data: result.order
+          });
+      } else {
+          res.status(500).json(result); 
+      }
   } catch (error) {
-    res.status(500).send({
-      success: false,
-      messsage: 'No Product has found with this Id!',
-    })
+      res.status(500).json({
+          success: false,
+          message: 'An unexpected error occurred',
+      });
   }
-}
+};
 
 const getAllOrders = async (req: Request, res: Response) => {
   try {
@@ -36,14 +35,7 @@ const getAllOrders = async (req: Request, res: Response) => {
         res.status(200).json({
           success: true,
           message: 'Orders fetched successfully for user email!!',
-          data: result?.map((order) => {
-            return {
-              email: order.email,
-              productId: order.productId,
-              price: order.price,
-              quantity: order.quantity,
-            }
-          }),
+          data: result
         })
       } else {
         res.status(500).json({
