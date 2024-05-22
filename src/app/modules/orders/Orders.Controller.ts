@@ -2,29 +2,29 @@ import { Request, Response } from 'express'
 import { OrderResult, OrderServices } from './Orders.Services'
 import OrderValidationSchema from './Orders.Validation'
 
-
 const addOrders = async (req: Request, res: Response) => {
   try {
-      const orderData = req.body;
-      const validatedData = OrderValidationSchema.parse(orderData);
-      const result: OrderResult = await OrderServices.addOrderToDB(validatedData);
+    const orderData = req.body
+    const validatedData = OrderValidationSchema.parse(orderData)
+    const result: OrderResult = await OrderServices.addOrderToDB(validatedData)
 
-      if (result.success) {
-          res.status(200).json({
-              success: true,
-              message: result.message,
-              data: result.order
-          });
-      } else {
-          res.status(500).json(result); 
-      }
+    if (result.success) {
+      res.status(200).json({
+        success: true,
+        message: result.message,
+        data: result.order,
+      })
+    } else {
+      res.status(500).json(result)
+    }
   } catch (error) {
-      res.status(500).json({
-          success: false,
-          message: 'An unexpected error occurred',
-      });
+    res.status(500).json({
+      success: false,
+      message: 'An unexpected error occurred',
+      error: error,
+    })
   }
-};
+}
 
 const getAllOrders = async (req: Request, res: Response) => {
   try {
@@ -35,7 +35,7 @@ const getAllOrders = async (req: Request, res: Response) => {
         res.status(200).json({
           success: true,
           message: 'Orders fetched successfully for user email!!',
-          data: result
+          data: result,
         })
       } else {
         res.status(500).json({

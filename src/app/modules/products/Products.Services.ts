@@ -52,8 +52,9 @@ const updateSingleProductFromDB = async (id: string, productData: Product) => {
 
 const searchProductsFromDB = async (query: string) => {
   try {
+    const regex = { $regex: query, $options: 'i' }
     const result = await ProductsModel.find({
-      name: { $regex: query, $options: 'i' },
+      $or: [{ name: regex }, { description: regex }],
     })
     return result
   } catch (error) {
