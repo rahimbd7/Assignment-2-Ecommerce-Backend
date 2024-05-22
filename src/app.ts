@@ -16,4 +16,12 @@ app.use('/api/products', productRouter)
 
 app.use('/api/orders', ordersRouter)
 
+app.use((req: Request, res: Response, next: Function) => {
+  res.status(404).json({
+    success: false,
+    message: 'Route not found',
+  });
+  next();
+});
+
 export default app
